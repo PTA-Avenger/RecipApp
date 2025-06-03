@@ -1,0 +1,30 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.EditRecipePage"
+             Title="Edit Recipe"
+             Background="{StaticResource BackgroundThemeBrush}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+            <Label Text="Edit Your Recipe" FontSize="24" FontAttributes="Bold" TextColor="{AppThemeBinding Light='Black', Dark='White'}" />
+
+            <Entry x:Name="TitleEntry" Placeholder="Title" />
+            <Editor x:Name="DescriptionEditor" Placeholder="Description" HeightRequest="80" />
+            <Editor x:Name="IngredientsEditor" Placeholder="Ingredients" HeightRequest="100" />
+            <Editor x:Name="StepsEditor" Placeholder="Steps" HeightRequest="120" />
+
+            <Picker x:Name="CategoryPicker" Title="Select Category">
+                <Picker.Items>
+                    <x:String>Breakfast</x:String>
+                    <x:String>Lunch</x:String>
+                    <x:String>Dinner</x:String>
+                    <x:String>Dessert</x:String>
+                    <x:String>Snack</x:String>
+                    <x:String>Other</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <Button Text="Save Changes" Clicked="OnSaveClicked" BackgroundColor="#03DAC5" TextColor="Black" CornerRadius="10" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

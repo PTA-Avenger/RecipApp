@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.ProfilePage"
+             Title="My Profile"
+             Background="{StaticResource BackgroundThemeBrush}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+            <Label Text="👤 My Profile" FontSize="26" FontAttributes="Bold" />
+
+            <Label x:Name="EmailLabel" Text="Email: ..." FontSize="16" />
+            <Label x:Name="StatsLabel" Text="Recipes: 0" FontSize="14" TextColor="Gray" />
+
+            <CollectionView x:Name="MyRecipeListView">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" />
+                                <Label Text="{Binding Description}" FontSize="14" />
+                                <HorizontalStackLayout>
+                                    <Button Text="Edit" Clicked="OnEditRecipeClicked" CommandParameter="{Binding}" />
+                                    <Button Text="Delete" TextColor="Red" Clicked="OnDeleteRecipeClicked" CommandParameter="{Binding}" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

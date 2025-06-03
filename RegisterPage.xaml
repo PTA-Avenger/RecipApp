@@ -1,0 +1,50 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.RegisterPage"
+             Background="{StaticResource BackgroundThemeBrush}"
+             Title="Register">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+
+            <Label Text="👩‍🍳 Create Account"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light='Black', Dark='White'}" />
+
+            <Entry x:Name="EmailEntry"
+                   Placeholder="Email"
+                   Keyboard="Email"
+                   PlaceholderColor="Gray"
+                   TextColor="{AppThemeBinding Light='Black', Dark='White'}"
+                   BackgroundColor="{AppThemeBinding Light='#f0f0f0', Dark='#1e1e1e'}" />
+
+            <Entry x:Name="PasswordEntry"
+                   Placeholder="Password"
+                   IsPassword="True"
+                   PlaceholderColor="Gray"
+                   TextColor="{AppThemeBinding Light='Black', Dark='White'}"
+                   BackgroundColor="{AppThemeBinding Light='#f0f0f0', Dark='#1e1e1e'}" />
+
+            <Entry x:Name="ConfirmPasswordEntry"
+                   Placeholder="Confirm Password"
+                   IsPassword="True"
+                   PlaceholderColor="Gray"
+                   TextColor="{AppThemeBinding Light='Black', Dark='White'}"
+                   BackgroundColor="{AppThemeBinding Light='#f0f0f0', Dark='#1e1e1e'}" />
+
+            <Button Text="Register"
+                    Clicked="OnRegisterClicked"
+                    BackgroundColor="#6200EE"
+                    TextColor="White"
+                    CornerRadius="12" />
+
+            <Button Text="Back to Login"
+                    Clicked="OnBackClicked"
+                    BackgroundColor="#F5F5F5"
+                    TextColor="Black"
+                    CornerRadius="12" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,21 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.ShoppingListPage"
+             Title="Shopping List">
+
+    <VerticalStackLayout Padding="15" Spacing="10">
+        <Label Text="Smart Shopping List" FontSize="24" FontAttributes="Bold" />
+
+        <CollectionView x:Name="ShoppingListView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="8" Margin="5" BorderColor="Gray" CornerRadius="8">
+                        <Label Text="{Binding}" />
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Text="Generate from Recipes" Clicked="OnGenerateClicked" />
+    </VerticalStackLayout>
+</ContentPage>

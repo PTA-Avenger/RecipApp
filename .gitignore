@@ -1,0 +1,13 @@
+# Ignore user-specific files
+.vs/
+*.user
+*.suo
+
+# Ignore build output
+bin/
+obj/
+output/
+
+# Ignore other temporary files
+*.apk
+*.cache

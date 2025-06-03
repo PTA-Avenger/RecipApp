@@ -1,0 +1,59 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.HomePage"
+             Title="Home"
+             Background="{StaticResource BackgroundThemeBrush}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20" HorizontalOptions="Center">
+
+            <Label Text="👋 Welcome to Recipe App!"
+                   FontSize="26"
+                   HorizontalOptions="Center"
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light='Black', Dark='White'}" />
+
+            <Button Text="Add New Recipe" Clicked="OnAddRecipeClicked" CornerRadius="10" />
+            <Button Text="View All Recipes" Clicked="OnViewRecipesClicked" CornerRadius="10" />
+            <Button Text="View Favorites" Clicked="OnFavoritesClicked" CornerRadius="10" />
+            <Button Text="My Recipes" Clicked="OnMyRecipesClicked" CornerRadius="10" />
+            <Button Text="Meal Planner" Clicked="OnMealPlannerClicked" CornerRadius="10" />
+            <Button Text="What Can I Cook With..." Clicked="OnIngredientSuggestClicked" CornerRadius="10" />
+            <Button Text="Smart Shopping List" Clicked="OnShoppingListClicked" CornerRadius="10" />
+            <Button Text="Export Cookbook to PDF"
+                    Clicked="OnExportCookbookClicked"
+                    BackgroundColor="DarkCyan"
+                    TextColor="White"
+                    CornerRadius="10" />
+            <Button Text="View Achievements" Clicked="OnAchievementsClicked" CornerRadius="10" />
+            <Button Text="View Leaderboard" Clicked="OnLeaderboardClicked" CornerRadius="10"/>
+
+            <!-- Recipe of the Day -->
+            <Frame Padding="10" CornerRadius="12" BorderColor="Teal" BackgroundColor="#e0f7fa" Margin="10">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnRecipeOfTheDayTapped" />
+                </Frame.GestureRecognizers>
+                <VerticalStackLayout>
+                    <Label Text="🌟 Recipe of the Day" FontSize="20" FontAttributes="Bold" />
+                    <Label x:Name="DailyTitle" FontSize="18" FontAttributes="Bold" TextColor="Teal" />
+                    <Label x:Name="DailyDescription" FontSize="14" TextColor="DarkSlateGray" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Streak Tracker -->
+            <Frame BackgroundColor="#FFF3E0" CornerRadius="10" Padding="10" Margin="10">
+                <VerticalStackLayout>
+                    <Label Text="🔥 Streak Tracker" FontAttributes="Bold" FontSize="18"/>
+                    <Label x:Name="StreakLabel" Text="Loading..." FontSize="14" TextColor="DarkOrange"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="Logout"
+                    Clicked="OnLogoutClicked"
+                    BackgroundColor="#ff4d4d"
+                    TextColor="White"
+                    CornerRadius="10" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

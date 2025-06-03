@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.MealPlannerPage"
+             Title="Meal Planner">
+
+	<VerticalStackLayout Padding="20" Spacing="12">
+
+		<Label Text="📅 Your Meal Plan" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+
+		<CollectionView x:Name="MealPlanListView">
+			<CollectionView.ItemTemplate>
+				<DataTemplate>
+					<Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10">
+						<VerticalStackLayout>
+							<Label Text="{Binding Title}" FontSize="18" FontAttributes="Bold" />
+							<Label Text="{Binding Description}" FontSize="14" />
+							<Label Text="{Binding Category, StringFormat='Category: {0}'}" FontSize="12" />
+						</VerticalStackLayout>
+					</Frame>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
+
+		<Button Text="Export Shopping List"
+                Clicked="OnExportShoppingListClicked"
+                BackgroundColor="Teal"
+                TextColor="White"
+                FontAttributes="Bold"
+                CornerRadius="10" />
+	</VerticalStackLayout>
+</ContentPage>

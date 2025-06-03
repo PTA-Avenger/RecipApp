@@ -1,0 +1,37 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.VoiceCookingPage"
+             Title="Cooking Assistant"
+             BackgroundColor="{StaticResource BackgroundThemeColor}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <Label x:Name="RecipeTitleLabel"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextThemeColor}" />
+
+            <Label Text="Steps:"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextThemeColor}" />
+
+            <CollectionView x:Name="StepsView"
+                            SelectionMode="Single"
+                            SelectionChanged="OnStepSelected">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="Gray" CornerRadius="10" Padding="10" Margin="5">
+                            <Label Text="{Binding .}"
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextThemeColor}" />
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Text="Read All Steps" Clicked="OnReadAllStepsClicked" />
+            <Button Text="Share Steps" Clicked="OnShareClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,12 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.ChallengesPage"
+             Title="Daily Challenge">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+        <Label x:Name="ChallengeDescription" FontSize="20" FontAttributes="Bold" />
+        <ProgressBar x:Name="ChallengeProgressBar" Progress="0" HeightRequest="20" />
+        <Label x:Name="ProgressLabel" FontSize="14" />
+        <Button Text="Mark Progress" Clicked="OnMarkProgressClicked" />
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,0 +1,13 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.IngredientSuggestPage"
+             Title="Cook With What You Have">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            <Editor x:Name="IngredientEditor" Placeholder="Enter ingredients you have (e.g. eggs, tomato, onion)" HeightRequest="100" />
+            <Button Text="Find Recipes" Clicked="OnFindRecipesClicked" />
+            <Label x:Name="RecipesLabel" FontSize="14" TextColor="DarkSlateGray" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

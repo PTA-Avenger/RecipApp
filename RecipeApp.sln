@@ -1,0 +1,94 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeApp", "RecipeApp.csproj", "{A19B010A-987C-4621-B4F2-4C49FE26EFB5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		Achievement.cs = Achievement.cs
+		Challenge.cs = Challenge.cs
+		CookingStreakData.cs = CookingStreakData.cs
+		DailyChallenge.cs = DailyChallenge.cs
+		Favorite.cs = Favorite.cs
+		FirebaseAuthResponse.cs = FirebaseAuthResponse.cs
+		NutritionFood.cs = NutritionFood.cs
+		NutritionResponse.cs = NutritionResponse.cs
+		NutritionResult.cs = NutritionResult.cs
+		Recipe.cs = Recipe.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pages", "Pages", "{2372A5DB-D3EA-4801-A72F-4AB886AE2D3E}"
+	ProjectSection(SolutionItems) = preProject
+		AchievementsPage.xaml = AchievementsPage.xaml
+		AchievementsPage.xaml.cs = AchievementsPage.xaml.cs
+		AddRecipePage.xaml = AddRecipePage.xaml
+		AddRecipePage.xaml.cs = AddRecipePage.xaml.cs
+		ChallengesPage.xaml = ChallengesPage.xaml
+		ChallengesPage.xaml.cs = ChallengesPage.xaml.cs
+		EditRecipePage.xaml = EditRecipePage.xaml
+		EditRecipePage.xaml.cs = EditRecipePage.xaml.cs
+		FavoritesPage.xaml = FavoritesPage.xaml
+		FavoritesPage.xaml.cs = FavoritesPage.xaml.cs
+		HomePage.xaml = HomePage.xaml
+		HomePage.xaml.cs = HomePage.xaml.cs
+		IngredientSuggestPage.xaml = IngredientSuggestPage.xaml
+		IngredientSuggestPage.xaml.cs = IngredientSuggestPage.xaml.cs
+		LeaderboardPage.xaml = LeaderboardPage.xaml
+		LeaderboardPage.xaml.cs = LeaderboardPage.xaml.cs
+		LoginPage.xaml = LoginPage.xaml
+		LoginPage.xaml.cs = LoginPage.xaml.cs
+		MealPlannerPage.xaml = MealPlannerPage.xaml
+		MealPlannerPage.xaml.cs = MealPlannerPage.xaml.cs
+		MyRecipesPage.xaml = MyRecipesPage.xaml
+		MyRecipesPage.xaml.cs = MyRecipesPage.xaml.cs
+		ProfilePage.xaml = ProfilePage.xaml
+		ProfilePage.xaml.cs = ProfilePage.xaml.cs
+		RecipeDetailPage.xaml = RecipeDetailPage.xaml
+		RecipeDetailPage.xaml.cs = RecipeDetailPage.xaml.cs
+		RecipeListPage.xaml = RecipeListPage.xaml
+		RecipeListPage.xaml.cs = RecipeListPage.xaml.cs
+		RegisterPage.xaml = RegisterPage.xaml
+		RegisterPage.xaml.cs = RegisterPage.xaml.cs
+		ShoppingListPage.xaml = ShoppingListPage.xaml
+		ShoppingListPage.xaml.cs = ShoppingListPage.xaml.cs
+		VoiceCookingPage.xaml = VoiceCookingPage.xaml
+		VoiceCookingPage.xaml.cs = VoiceCookingPage.xaml.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{D922871B-F4BB-4689-8123-C5CEC5530AA6}"
+	ProjectSection(SolutionItems) = preProject
+		AchievementService.cs = AchievementService.cs
+		AuthService.cs = AuthService.cs
+		FirestoreService.cs = FirestoreService.cs
+		GeminiService.cs = GeminiService.cs
+		NutritionService.cs = NutritionService.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Helpers", "Helpers", "{8C92F88D-ABF7-468D-B2A6-3990BF35F711}"
+	ProjectSection(SolutionItems) = preProject
+		CookbookExporter.cs = CookbookExporter.cs
+		IngredientHelper.cs = IngredientHelper.cs
+		PdfExporter.cs = PdfExporter.cs
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A19B010A-987C-4621-B4F2-4C49FE26EFB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19B010A-987C-4621-B4F2-4C49FE26EFB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A19B010A-987C-4621-B4F2-4C49FE26EFB5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{A19B010A-987C-4621-B4F2-4C49FE26EFB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A19B010A-987C-4621-B4F2-4C49FE26EFB5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A4A0953-29D9-4EAC-94B3-30B79BB6EEDD}
+	EndGlobalSection
+EndGlobal

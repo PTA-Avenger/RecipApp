@@ -1,0 +1,54 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:Class="RecipeApp.Pages.RecipeDetailPage"
+             Title="Recipe Details"
+             Background="{StaticResource BackgroundThemeBrush}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="12">
+
+            <Label Text="{Binding Title}" FontSize="24" FontAttributes="Bold" />
+            <Label Text="{Binding Description}" FontSize="16" />
+            <Label Text="{Binding Category, StringFormat='Category: {0}'}" FontSize="14" TextColor="DarkOliveGreen" />
+
+            <Label Text="Ingredients" FontAttributes="Bold" />
+            <Label Text="{Binding Ingredients}" />
+
+            <Label Text="Steps" FontAttributes="Bold" />
+            <Label Text="{Binding Steps}" />
+
+            <Label Text="{Binding CreatedAt, StringFormat='Posted on {0:MMM dd, yyyy}'}"
+                   FontSize="12" TextColor="Gray" />
+            <Label Text="{Binding UserId, StringFormat='Posted by: {0}'}"
+                   FontSize="12" TextColor="Gray" />
+
+            <Button Text="View Nutrition Info" Clicked="OnNutritionClicked" />
+
+            <microcharts:ChartView x:Name="NutritionChartView"
+                       HeightRequest="250"
+                       Chart="{Binding NutritionChart}" />
+
+            <HorizontalStackLayout Spacing="10">
+                <ImageButton x:Name="FavoriteButton" Clicked="OnFavoriteClicked"
+                             HeightRequest="40" WidthRequest="40" />
+                <Button Text="Delete" Clicked="OnDeleteClicked" x:Name="DeleteButton" TextColor="Red" />
+                <Button Text="Voice Cooking" Clicked="OnVoiceCookingClicked" />
+                <Button Text="Share as PDF" Clicked="OnShareClicked" />
+                <Button Text="View Nutrition Info"
+                        Clicked="OnViewNutritionInfoClicked"
+                        BackgroundColor="DarkCyan"
+                        TextColor="White" />
+                <Button Text="Check Allergens and Substitutions"
+                        Clicked="OnCheckAllergensClicked"
+                        BackgroundColor="Orange"
+                        TextColor="White" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="10">
+                <Button Text="Share to WhatsApp" Clicked="OnShareToWhatsAppClicked" />
+                <Button Text="Share to iMessage" Clicked="OnShareToiMessageClicked" />
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

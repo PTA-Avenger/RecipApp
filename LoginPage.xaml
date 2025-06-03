@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.LoginPage"
+             Background="{StaticResource BackgroundThemeBrush}"
+             Title="Login">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="Center">
+
+            <Label Text="👩‍🍳 RecipeApp Login"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light='Black', Dark='White'}" />
+
+            <Entry x:Name="EmailEntry"
+                   Placeholder="Email"
+                   Keyboard="Email"
+                   PlaceholderColor="Gray"
+                   TextColor="{AppThemeBinding Light='Black', Dark='White'}"
+                   BackgroundColor="{AppThemeBinding Light='#f0f0f0', Dark='#1e1e1e'}" />
+
+            <Entry x:Name="PasswordEntry"
+                   Placeholder="Password"
+                   IsPassword="True"
+                   PlaceholderColor="Gray"
+                   TextColor="{AppThemeBinding Light='Black', Dark='White'}"
+                   BackgroundColor="{AppThemeBinding Light='#f0f0f0', Dark='#1e1e1e'}" />
+
+            <Button Text="Login"
+                    Clicked="OnLoginClicked"
+                    BackgroundColor="#6200EE"
+                    TextColor="White"
+                    CornerRadius="12" />
+
+            <Button Text="Register"
+                    Clicked="OnRegisterClicked"
+                    BackgroundColor="#03DAC5"
+                    TextColor="Black"
+                    CornerRadius="12" />
+
+            <Button Text="Forgot Password?"
+                    Clicked="OnForgotPasswordClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="DodgerBlue"
+                    FontAttributes="Italic" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

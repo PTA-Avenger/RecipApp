@@ -1,0 +1,38 @@
+﻿<!-- AchievementsPage.xaml -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.AchievementsPage"
+             Title="Achievements">
+
+    <VerticalStackLayout Padding="10">
+        <Label Text="🎖️ Your Achievements" 
+               FontSize="24"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" 
+               Margin="0,10" />
+
+        <CollectionView x:Name="AchievementsListView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="5"
+                           Padding="10"
+                           CornerRadius="10"
+                           BorderColor="Gray"
+                           BackgroundColor="{Binding IsUnlocked, Converter={StaticResource BoolToColorConverter}}">
+
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Title}" 
+                                   FontAttributes="Bold" 
+                                   FontSize="18" />
+                            <Label Text="{Binding Description}" 
+                                   FontSize="14" 
+                                   TextColor="Gray"/>
+                        </VerticalStackLayout>
+
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+
+</ContentPage>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.RecipeListPage"
+             Background="{StaticResource BackgroundThemeBrush}"
+             Title="Recipes">
+
+    <VerticalStackLayout Padding="10" Spacing="10">
+
+        <Entry x:Name="SearchEntry"
+               Placeholder="Search by title or category"
+               TextChanged="OnSearchTextChanged" />
+
+        <Picker x:Name="CategoryFilterPicker"
+                Title="Filter by Category"
+                SelectedIndexChanged="OnCategoryFilterChanged">
+            <Picker.Items>
+                <x:String>All</x:String>
+                <x:String>Breakfast</x:String>
+                <x:String>Lunch</x:String>
+                <x:String>Dinner</x:String>
+                <x:String>Dessert</x:String>
+                <x:String>Snack</x:String>
+                <x:String>Other</x:String>
+            </Picker.Items>
+        </Picker>
+
+        <CollectionView x:Name="RecipeListView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnRecipeTapped" CommandParameter="{Binding}" />
+                        </Frame.GestureRecognizers>
+
+                        <VerticalStackLayout Spacing="6">
+
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding Title}"
+                                       FontAttributes="Bold"
+                                       FontSize="20"
+                                       HorizontalOptions="StartAndExpand" />
+                                <ImageButton Source="heart.png"
+                                             Clicked="OnFavoriteClicked"
+                                             CommandParameter="{Binding}"
+                                             WidthRequest="30" HeightRequest="30" />
+                            </HorizontalStackLayout>
+
+                            <Label Text="{Binding Description}" FontSize="14" />
+                            <Label Text="{Binding CreatedAt, StringFormat='Added on {0:MMM dd, yyyy}'}"
+                                   FontSize="10" TextColor="Gray" />
+                            <Label Text="{Binding UserId, StringFormat='Posted by {0}'}"
+                                   FontSize="10" TextColor="DarkGray" />
+                            <Label Text="{Binding Category, StringFormat='Category: {0}'}"
+                                   FontSize="12" TextColor="DarkGreen" />
+
+                            <!-- ✅ Share Button -->
+                            <Button Text="Share"
+                                    Clicked="OnShareRecipeClicked"
+                                    CommandParameter="{Binding}" />
+
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>
