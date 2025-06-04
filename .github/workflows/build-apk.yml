@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # Use Windows for MAUI and Android
+    runs-on: windows-latest
 
     steps:
     - name: 🧾 Checkout repository
@@ -19,16 +19,16 @@ jobs:
       with:
         dotnet-version: '9.0.x'
 
-    - name: 📦 Install MAUI Android Workload
+    - name: 📦 Install Android Workload
       run: dotnet workload install maui-android
 
-    - name: 🔍 Restore dependencies
-      run: dotnet restore
+    - name: 🔍 Restore (only Android)
+      run: dotnet restore ./RecipeApp/RecipeApp.csproj
 
-    - name: 🛠️ Build APK (Android only)
-      run: dotnet publish RecipeApp.csproj -f net9.0-android -c Release -o output
+    - name: 🛠️ Publish APK (Android only)
+      run: dotnet publish ./RecipeApp/RecipeApp.csproj -f net9.0-android -c Release -o output
 
-    - name: 📤 Upload APK as GitHub Artifact
+    - name: 📤 Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: RecipeApp-APK
