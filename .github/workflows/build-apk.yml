@@ -25,8 +25,8 @@ jobs:
     - name: 🔍 Restore dependencies
       run: dotnet restore
 
-    - name: 🛠️ Build APK (Publish for Android)
-      run: dotnet publish -f net9.0-android -c Release -o output
+    - name: 🛠️ Build APK (Android only)
+      run: dotnet publish RecipeApp.csproj -f net9.0-android -c Release -o output
 
     - name: 📤 Upload APK as GitHub Artifact
       uses: actions/upload-artifact@v4
