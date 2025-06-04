@@ -25,8 +25,9 @@ public partial class ShoppingListPage : ContentPage
         {
             if (!string.IsNullOrWhiteSpace(recipe.Ingredients))
             {
+                // Split on all common line endings to support both Windows and Unix text files
                 var lines = recipe.Ingredients
-                    .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    .Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
                 ingredients.AddRange(lines);
             }

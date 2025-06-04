@@ -1,64 +1,56 @@
-﻿using RecipeApp.Models;
-using RecipeApp.Services;
-using RecipeApp.Pages;
+﻿using RecipeApp.Services;
 
 namespace RecipeApp.Pages;
 
 public partial class ProfilePage : ContentPage
 {
     private readonly AuthService _authService;
-    private readonly FirestoreService _firestoreService = new();
-    private List<Recipe> _userRecipes = new();
 
     public ProfilePage(AuthService authService)
     {
         InitializeComponent();
         _authService = authService;
+        LoadUserData();
     }
 
-    protected override async void OnAppearing()
+    private async void LoadUserData()
     {
-        base.OnAppearing();
-
-        // Show email
-        EmailLabel.Text = $"Email: {_authService.CurrentUser?.Email ?? "Unknown"}";
-
-        // Get user's own recipes
-        var all = await _firestoreService.GetRecipesAsync(_authService.GetIdToken());
-        _userRecipes = all.Where(r => r.UserId == _authService.GetUserId()).ToList();
-        MyRecipeListView.ItemsSource = _userRecipes;
-
-        StatsLabel.Text = $"Recipes: {_userRecipes.Count}";
+        // Load current username for display
+        var currentUser = await _authService.GetCurrentUserAsync();
+        UsernameEntry.Text = currentUser?.Username ?? string.Empty;
     }
 
-
-    private async void OnDeleteRecipeClicked(object sender, EventArgs e)
+    private async void OnSaveClicked(object sender, EventArgs e)
     {
-        if (sender is Button button && button.CommandParameter is Recipe recipe)
+        var newUsername = UsernameEntry.Text?.Trim();
+        var newPassword = PasswordEntry.Text?.Trim();
+
+        if (string.IsNullOrWhiteSpace(newUsername))
         {
-            var confirm = await DisplayAlert("Delete", $"Delete \"{recipe.Title}\"?", "Yes", "No");
-            if (!confirm) return;
-
-            var success = await _firestoreService.DeleteRecipeAsync(recipe.Id, _authService.GetIdToken());
-
-            if (success)
-            {
-                _userRecipes.Remove(recipe);
-                MyRecipeListView.ItemsSource = _userRecipes.ToList();
-                await DisplayAlert("Deleted", "Recipe deleted.", "OK");
-            }
-            else
-            {
-                await DisplayAlert("Error", "Failed to delete recipe.", "OK");
-            }
+            await DisplayAlert("Missing Username", "Please enter a username.", "OK");
+            return;
         }
-    }
 
-    private async void OnEditRecipeClicked(object sender, EventArgs e)
-    {
-        if (sender is Button button && button.CommandParameter is Recipe recipe)
+        // Update username if changed
+        bool usernameUpdated = await _authService.UpdateUsernameAsync(newUsername);
+
+        // Update password if entered
+        bool passwordUpdated = true;
+        if (!string.IsNullOrWhiteSpace(newPassword))
+            passwordUpdated = await _authService.UpdatePasswordAsync(newPassword);
+
+        if (usernameUpdated && passwordUpdated)
         {
-            await Navigation.PushAsync(new EditRecipePage(recipe, _authService));
+            await DisplayAlert("Success", "Profile updated successfully!", "OK");
+            PasswordEntry.Text = string.Empty;
+        }
+        else if (!usernameUpdated)
+        {
+            await DisplayAlert("Error", "Failed to update username.", "OK");
+        }
+        else if (!passwordUpdated)
+        {
+            await DisplayAlert("Error", "Failed to update password.", "OK");
         }
     }
 }

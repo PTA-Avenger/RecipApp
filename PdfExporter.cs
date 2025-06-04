@@ -13,15 +13,16 @@ namespace RecipeApp.Helpers
             var page = document.AddPage();
             var gfx = XGraphics.FromPdfPage(page);
 
-            var titleFont = new XFont("Arial", 18, XFontStyle.Bold);
-            var subFont = new XFont("Arial", 12);
+            // Use standard PDF fonts
+            var titleFont = new XFont("Helvetica", 18, XFontStyle.Bold);
+            var subFont = new XFont("Helvetica", 12);
             var y = 40;
 
             void DrawText(string label, string content)
             {
                 gfx.DrawString(label, titleFont, XBrushes.Black, new XPoint(40, y));
                 y += 25;
-                gfx.DrawString(content, subFont, XBrushes.Black, new XRect(40, y, page.Width - 80, 200), XStringFormats.TopLeft);
+                gfx.DrawString(string.IsNullOrWhiteSpace(content) ? "(None)" : content, subFont, XBrushes.Black, new XRect(40, y, page.Width - 80, 200), XStringFormats.TopLeft);
                 y += 80;
             }
 

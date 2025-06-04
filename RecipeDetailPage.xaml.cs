@@ -94,20 +94,23 @@ public partial class RecipeDetailPage : ContentPage
             await DisplayAlert("Error", $"Failed to share: {ex.Message}", "OK");
         }
     }
+
     private async void OnShareToWhatsAppClicked(object sender, EventArgs e)
     {
-        var message = $"Check out this recipe: {_recipe.Title}\n\n{_recipe.Description}\n\nCategory: {_recipe.Category}";
+        // WhatsApp's max message size is ~65,000 chars, but UX is better with shorter text
+        var rawMessage = $"Check out this recipe: {_recipe.Title}\n\n{_recipe.Description}\n\nCategory: {_recipe.Category}";
+        var message = rawMessage.Length > 1000 ? rawMessage.Substring(0, 1000) + "..." : rawMessage;
 
 #if ANDROID
-    var uri = $"whatsapp://send?text={Uri.EscapeDataString(message)}";
-    try
-    {
-        await Launcher.Default.OpenAsync(uri);
-    }
-    catch
-    {
-        await DisplayAlert("Error", "WhatsApp is not installed.", "OK");
-    }
+        var uri = $"whatsapp://send?text={Uri.EscapeDataString(message)}";
+        try
+        {
+            await Launcher.Default.OpenAsync(uri);
+        }
+        catch
+        {
+            await DisplayAlert("Error", "WhatsApp is not installed.", "OK");
+        }
 #elif IOS
     var url = $"whatsapp://send?text={Uri.EscapeDataString(message)}";
     if (await Launcher.Default.CanOpenAsync(url))
@@ -115,7 +118,7 @@ public partial class RecipeDetailPage : ContentPage
     else
         await DisplayAlert("Error", "WhatsApp is not installed.", "OK");
 #else
-        await DisplayAlert("Unsupported", "WhatsApp sharing is not available on this platform.", "OK");
+    await DisplayAlert("Unsupported", "WhatsApp sharing is not available on this platform.", "OK");
 #endif
     }
 
@@ -201,4 +204,42 @@ public partial class RecipeDetailPage : ContentPage
         await DisplayAlert("Allergen & Substitution Info", message, "OK");
     }
 
+    private async void OnMarkAsCookedClicked(object sender, EventArgs e)
+    {
+        var userId = _authService.GetUserId();
+        var idToken = _authService.GetIdToken();
+
+        // Get current streak data
+        var streakData = await _firestoreService.GetUserCookingStreakAsync(userId, idToken);
+
+        int currentStreak = streakData.StreakCount;
+        DateTime lastCookedDate = streakData.LastCookedDate;
+
+        var today = DateTime.UtcNow.Date;
+        var daysSinceLastCooked = (today - lastCookedDate.Date).Days;
+
+        if (daysSinceLastCooked == 1)
+        {
+            currentStreak++;
+        }
+        else if (daysSinceLastCooked > 1)
+        {
+            currentStreak = 1;
+        }
+        else if (daysSinceLastCooked == 0)
+        {
+            // Already cooked today, keep streak the same
+        }
+        else
+        {
+            currentStreak = 1;
+        }
+
+        bool streakUpdated = await _firestoreService.UpdateUserCookingStreakAsync(userId, today, currentStreak, idToken);
+
+        if (streakUpdated)
+            await DisplayAlert("Streak Updated", $"Great job! Your cooking streak is now {currentStreak} days.", "OK");
+        else
+            await DisplayAlert("Warning", "Failed to update cooking streak.", "OK");
+    }
 }

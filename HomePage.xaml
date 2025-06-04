@@ -27,6 +27,7 @@
                     CornerRadius="10" />
             <Button Text="View Achievements" Clicked="OnAchievementsClicked" CornerRadius="10" />
             <Button Text="View Leaderboard" Clicked="OnLeaderboardClicked" CornerRadius="10"/>
+            <Button Text="Profile" Clicked="OnProfileClicked" CornerRadius="10"/>
 
             <!-- Recipe of the Day -->
             <Frame Padding="10" CornerRadius="12" BorderColor="Teal" BackgroundColor="#e0f7fa" Margin="10">

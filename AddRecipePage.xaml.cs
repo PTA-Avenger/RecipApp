@@ -64,51 +64,7 @@ public partial class AddRecipePage : ContentPage
             return;
         }
 
-        // Get current streak data from Firestore
-        var streakData = await _firestoreService.GetUserCookingStreakAsync(userId,idToken);
-
-        int currentStreak = 0;
-        DateTime lastCookedDate = DateTime.MinValue;
-
-        currentStreak = streakData.StreakCount;
-        lastCookedDate = streakData.LastCookedDate;
-
-        // Calculate new streak based on lastCookedDate and today
-        var today = DateTime.UtcNow.Date;
-        var daysSinceLastCooked = (today - lastCookedDate.Date).Days;
-
-        if (daysSinceLastCooked == 1)
-        {
-            // Continue streak
-            currentStreak++;
-        }
-        else if (daysSinceLastCooked > 1)
-        {
-            // Streak broken, reset to 1
-            currentStreak = 1;
-        }
-        else if (daysSinceLastCooked == 0)
-        {
-            // Already cooked today, keep streak the same
-        }
-        else
-        {
-            // If lastCookedDate is in the future or invalid, reset streak
-            currentStreak = 1;
-        }
-
-        // Update streak in Firestore
-        bool streakUpdated = await _firestoreService.UpdateUserCookingStreakAsync(userId, today, currentStreak, idToken);
-
-        if (streakUpdated)
-        {
-            await DisplayAlert("Success", $"Recipe added! Your cooking streak is now {currentStreak} days.", "OK");
-        }
-        else
-        {
-            await DisplayAlert("Warning", "Recipe added but failed to update cooking streak.", "OK");
-        }
-
+        await DisplayAlert("Success", "Recipe added!", "OK");
         await Navigation.PopAsync();
     }
 }

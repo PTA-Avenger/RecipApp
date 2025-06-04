@@ -27,6 +27,13 @@ public partial class MealPlannerPage : ContentPage
             .ToList();
 
         MealPlanListView.ItemsSource = _mealPlanRecipes;
+        // Add this after setting ItemsSource in OnAppearing
+        MealPlanListView.ItemsSource = _mealPlanRecipes;
+
+        if (_mealPlanRecipes == null || !_mealPlanRecipes.Any())
+        {
+            await DisplayAlert("Meal Plan Empty", "No recipes have been added to your meal plan yet.", "OK");
+        }
     }
 
     private async void OnExportShoppingListClicked(object sender, EventArgs e)

@@ -4,8 +4,7 @@
              Title="My Recipes"
              Background="{StaticResource BackgroundThemeBrush}">
 
-    <VerticalStackLayout Padding="10" Spacing="12">
-
+    <VerticalStackLayout Padding="10" Spacing="12" VerticalOptions="FillAndExpand">
         <Picker x:Name="CategoryFilterPicker" Title="Filter by Category" SelectedIndexChanged="OnCategoryChanged">
             <Picker.Items>
                 <x:String>All</x:String>
@@ -25,14 +24,14 @@
             </Picker.Items>
         </Picker>
 
-        <CollectionView x:Name="MyRecipesListView">
+        <CollectionView x:Name="MyRecipesListView"
+                        VerticalOptions="FillAndExpand">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame Padding="10" Margin="5" BorderColor="Gray" CornerRadius="10">
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnRecipeTapped" CommandParameter="{Binding}" />
                         </Frame.GestureRecognizers>
-
                         <VerticalStackLayout>
                             <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="20" />
                             <Label Text="{Binding Description}" FontSize="14" />

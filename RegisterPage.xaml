@@ -1,50 +1,41 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RecipeApp.Pages.RegisterPage"
-             Background="{StaticResource BackgroundThemeBrush}"
-             Title="Register">
+             Title="Register"
+             BackgroundColor="White">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+	<VerticalStackLayout Padding="24" Spacing="16" VerticalOptions="CenterAndExpand">
+		<Label Text="Create Account"
+               FontSize="28"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               TextColor="#257A5A"/>
 
-            <Label Text="👩‍🍳 Create Account"
-                   FontSize="28"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   TextColor="{AppThemeBinding Light='Black', Dark='White'}" />
+		<Entry x:Name="UsernameEntry"
+               Placeholder="Username"
+               BackgroundColor="#F7F7F7"
+               TextColor="#222"
+               Margin="0,0,0,0"/>
 
-            <Entry x:Name="EmailEntry"
-                   Placeholder="Email"
-                   Keyboard="Email"
-                   PlaceholderColor="Gray"
-                   TextColor="{AppThemeBinding Light='Black', Dark='White'}"
-                   BackgroundColor="{AppThemeBinding Light='#f0f0f0', Dark='#1e1e1e'}" />
+		<Entry x:Name="EmailEntry"
+               Placeholder="Email"
+               Keyboard="Email"
+               BackgroundColor="#F7F7F7"
+               TextColor="#222"
+               Margin="0,0,0,0"/>
 
-            <Entry x:Name="PasswordEntry"
-                   Placeholder="Password"
-                   IsPassword="True"
-                   PlaceholderColor="Gray"
-                   TextColor="{AppThemeBinding Light='Black', Dark='White'}"
-                   BackgroundColor="{AppThemeBinding Light='#f0f0f0', Dark='#1e1e1e'}" />
+		<Entry x:Name="PasswordEntry"
+               Placeholder="Password"
+               IsPassword="True"
+               BackgroundColor="#F7F7F7"
+               TextColor="#222"
+               Margin="0,0,0,0"/>
 
-            <Entry x:Name="ConfirmPasswordEntry"
-                   Placeholder="Confirm Password"
-                   IsPassword="True"
-                   PlaceholderColor="Gray"
-                   TextColor="{AppThemeBinding Light='Black', Dark='White'}"
-                   BackgroundColor="{AppThemeBinding Light='#f0f0f0', Dark='#1e1e1e'}" />
-
-            <Button Text="Register"
-                    Clicked="OnRegisterClicked"
-                    BackgroundColor="#6200EE"
-                    TextColor="White"
-                    CornerRadius="12" />
-
-            <Button Text="Back to Login"
-                    Clicked="OnBackClicked"
-                    BackgroundColor="#F5F5F5"
-                    TextColor="Black"
-                    CornerRadius="12" />
-        </VerticalStackLayout>
-    </ScrollView>
+		<Button Text="Register"
+                Clicked="OnRegisterClicked"
+                BackgroundColor="#6DDE98"
+                TextColor="White"
+                CornerRadius="10"
+                FontSize="18"/>
+	</VerticalStackLayout>
 </ContentPage>

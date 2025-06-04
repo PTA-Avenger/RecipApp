@@ -1,54 +1,101 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
-             x:Class="RecipeApp.Pages.RecipeDetailPage"
-             Title="Recipe Details"
-             Background="{StaticResource BackgroundThemeBrush}">
+             x:Class="RecipeApp.Pages.MyRecipesPage"
+             Title="My Recipes"
+             BackgroundColor="White">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="12">
+    <VerticalStackLayout Padding="20,10,20,10" Spacing="20" VerticalOptions="FillAndExpand" BackgroundColor="White">
 
-            <Label Text="{Binding Title}" FontSize="24" FontAttributes="Bold" />
-            <Label Text="{Binding Description}" FontSize="16" />
-            <Label Text="{Binding Category, StringFormat='Category: {0}'}" FontSize="14" TextColor="DarkOliveGreen" />
+        <Label Text="My Recipes"
+               FontSize="28"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               TextColor="#333" 
+               Margin="0,10,0,0"/>
 
-            <Label Text="Ingredients" FontAttributes="Bold" />
-            <Label Text="{Binding Ingredients}" />
+        <Picker x:Name="CategoryFilterPicker" Title="Filter by Category"
+                Margin="0,0,0,10"
+                BackgroundColor="#F7F7F7" TextColor="#333" >
+            <Picker.Items>
+                <x:String>All</x:String>
+                <x:String>Breakfast</x:String>
+                <x:String>Lunch</x:String>
+                <x:String>Dinner</x:String>
+                <x:String>Dessert</x:String>
+                <x:String>Snack</x:String>
+                <x:String>Other</x:String>
+            </Picker.Items>
+        </Picker>
 
-            <Label Text="Steps" FontAttributes="Bold" />
-            <Label Text="{Binding Steps}" />
+        <Picker x:Name="SortPicker" Title="Sort by"
+                Margin="0,0,0,20"
+                BackgroundColor="#F7F7F7" TextColor="#333" >
+            <Picker.Items>
+                <x:String>Newest First</x:String>
+                <x:String>Oldest First</x:String>
+            </Picker.Items>
+        </Picker>
 
-            <Label Text="{Binding CreatedAt, StringFormat='Posted on {0:MMM dd, yyyy}'}"
-                   FontSize="12" TextColor="Gray" />
-            <Label Text="{Binding UserId, StringFormat='Posted by: {0}'}"
-                   FontSize="12" TextColor="Gray" />
+        <CollectionView x:Name="MyRecipesListView"
+                        VerticalOptions="FillAndExpand"
+                        BackgroundColor="White"
+                        SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="12"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="16" Margin="0,0,0,8"
+                           BorderColor="#E0E0E0"
+                           CornerRadius="14"
+                           BackgroundColor="#FAFAFA"
+                           HasShadow="True">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnRecipeTapped" CommandParameter="{Binding}" />
+                        </Frame.GestureRecognizers>
 
-            <Button Text="View Nutrition Info" Clicked="OnNutritionClicked" />
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="{Binding Title}"
+                                   FontSize="22"
+                                   FontAttributes="Bold"
+                                   TextColor="#257A5A" />
+                            <Label Text="{Binding Description}"
+                                   FontSize="14"
+                                   TextColor="#666" 
+                                   LineBreakMode="TailTruncation"
+                                   MaxLines="2"/>
 
-            <microcharts:ChartView x:Name="NutritionChartView"
-                       HeightRequest="250"
-                       Chart="{Binding NutritionChart}" />
+                            <HorizontalStackLayout Spacing="12" Margin="0,8,0,0">
+                                <Button Text="Edit"
+                                        Clicked="OnEditClicked"
+                                        CommandParameter="{Binding}"
+                                        BackgroundColor="#EAF8EF"
+                                        TextColor="#257A5A"
+                                        CornerRadius="8"
+                                        FontSize="14"
+                                        />
+                                <Button Text="Delete"
+                                        Clicked="OnDeleteClicked"
+                                        CommandParameter="{Binding}"
+                                        BackgroundColor="#FDECEC"
+                                        TextColor="#D32F2F"
+                                        CornerRadius="8"
+                                        FontSize="14"
+                                        />
+                                <Button Text="Mark as Cooked"
+                                        Clicked="OnMarkAsCookedClicked"
+                                        CommandParameter="{Binding}"
+                                        BackgroundColor="#E3F6E8"
+                                        TextColor="#388E3C"
+                                        CornerRadius="8"
+                                        FontSize="14"
+                                        />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-            <HorizontalStackLayout Spacing="10">
-                <ImageButton x:Name="FavoriteButton" Clicked="OnFavoriteClicked"
-                             HeightRequest="40" WidthRequest="40" />
-                <Button Text="Delete" Clicked="OnDeleteClicked" x:Name="DeleteButton" TextColor="Red" />
-                <Button Text="Voice Cooking" Clicked="OnVoiceCookingClicked" />
-                <Button Text="Share as PDF" Clicked="OnShareClicked" />
-                <Button Text="View Nutrition Info"
-                        Clicked="OnViewNutritionInfoClicked"
-                        BackgroundColor="DarkCyan"
-                        TextColor="White" />
-                <Button Text="Check Allergens and Substitutions"
-                        Clicked="OnCheckAllergensClicked"
-                        BackgroundColor="Orange"
-                        TextColor="White" />
-            </HorizontalStackLayout>
-            <HorizontalStackLayout Spacing="10">
-                <Button Text="Share to WhatsApp" Clicked="OnShareToWhatsAppClicked" />
-                <Button Text="Share to iMessage" Clicked="OnShareToiMessageClicked" />
-            </HorizontalStackLayout>
-
-        </VerticalStackLayout>
-    </ScrollView>
+    </VerticalStackLayout>
 </ContentPage>

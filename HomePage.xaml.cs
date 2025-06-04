@@ -130,5 +130,9 @@ public partial class HomePage : ContentPage
     {
         await Navigation.PushAsync(new LeaderboardPage(_authService));
     }
-  
+
+    private async void OnProfileClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new ProfilePage(_authService));
+    }
 }
