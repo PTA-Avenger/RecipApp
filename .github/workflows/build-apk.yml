@@ -22,14 +22,17 @@ jobs:
     - name: 📦 Install Android Workload
       run: dotnet workload install maui-android
 
-    - name: 🔍 Restore (only Android)
+    - name: 🔍 Restore dependencies
       run: dotnet restore RecipeApp.csproj
 
-    - name: 🛠️ Publish APK (Android only)
+    - name: 🛠️ Build Android APK
       run: dotnet publish RecipeApp.csproj -f net9.0-android -c Release -o output
 
-    - name: 📤 Upload APK
-      uses: actions/upload-artifact@v4
+    - name: 📤 Create GitHub Release
+      uses: softprops/action-gh-release@v2
       with:
-        name: RecipeApp-APK
-        path: output/*.apk
+        tag_name: v1.0.${{ github.run_number }}
+        name: Release v1.0.${{ github.run_number }}
+        files: output/*.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
