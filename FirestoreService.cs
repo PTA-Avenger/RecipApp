@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using RecipeApp.Models;
 using System.Text.Json;
@@ -591,6 +591,240 @@ namespace RecipeApp.Services
             return true;
         }
 
+        // Get user's favorite recipes
+        public async Task<List<Favorite>> GetFavoritesAsync(string userId, string idToken)
+        {
+            var favorites = new List<Favorite>();
+            
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", idToken);
+                
+                var favoritesUrl = $"https://firestore.googleapis.com/v1/projects/{_projectId}/databases/(default)/documents/favorites";
+                var response = await _httpClient.GetAsync($"{favoritesUrl}?filter=fields.userId.stringValue=\"{userId}\"");
+                
+                if (!response.IsSuccessStatusCode) return favorites;
+                
+                var json = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(json);
+                
+                if (doc.RootElement.TryGetProperty("documents", out var docs))
+                {
+                    foreach (var docElement in docs.EnumerateArray())
+                    {
+                        var fields = docElement.GetProperty("fields");
+                        var favorite = new Favorite
+                        {
+                            UserId = fields.GetProperty("userId").GetProperty("stringValue").GetString(),
+                            RecipeId = fields.GetProperty("recipeId").GetProperty("stringValue").GetString()
+                        };
+                        favorites.Add(favorite);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting favorites: {ex.Message}");
+            }
+            
+            return favorites;
+        }
+
+        // Save user achievement
+        public async Task<bool> SaveUserAchievementAsync(string userId, Achievement achievement, string idToken)
+        {
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", idToken);
+                
+                var achievementUrl = $"https://firestore.googleapis.com/v1/projects/{_projectId}/databases/(default)/documents/userAchievements";
+                
+                var data = new
+                {
+                    fields = new
+                    {
+                        userId = new { stringValue = userId },
+                        achievementId = new { stringValue = achievement.Id },
+                        title = new { stringValue = achievement.Title },
+                        description = new { stringValue = achievement.Description },
+                        isUnlocked = new { booleanValue = achievement.IsUnlocked },
+                        unlockedDate = new { timestampValue = DateTime.UtcNow.ToString("o") },
+                        points = new { integerValue = achievement.Points }
+                    }
+                };
+                
+                var response = await _httpClient.PostAsJsonAsync(achievementUrl, data);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving user achievement: {ex.Message}");
+                return false;
+            }
+        }
+
+        // Get user achievements
+        public async Task<List<Achievement>> GetUserAchievementsAsync(string userId, string idToken)
+        {
+            var achievements = new List<Achievement>();
+            
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", idToken);
+                
+                var achievementUrl = $"https://firestore.googleapis.com/v1/projects/{_projectId}/databases/(default)/documents/userAchievements";
+                var response = await _httpClient.GetAsync($"{achievementUrl}?filter=fields.userId.stringValue=\"{userId}\"");
+                
+                if (!response.IsSuccessStatusCode) return achievements;
+                
+                var json = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(json);
+                
+                if (doc.RootElement.TryGetProperty("documents", out var docs))
+                {
+                    foreach (var docElement in docs.EnumerateArray())
+                    {
+                        var fields = docElement.GetProperty("fields");
+                        var achievement = new Achievement
+                        {
+                            Id = fields.GetProperty("achievementId").GetProperty("stringValue").GetString(),
+                            Title = fields.GetProperty("title").GetProperty("stringValue").GetString(),
+                            Description = fields.GetProperty("description").GetProperty("stringValue").GetString(),
+                            IsUnlocked = fields.GetProperty("isUnlocked").GetProperty("booleanValue").GetBoolean(),
+                            Points = fields.TryGetProperty("points", out var pointsField) && pointsField.TryGetProperty("integerValue", out var pointsValue) ? int.Parse(pointsValue.GetString()) : 10
+                        };
+                        
+                        if (fields.TryGetProperty("unlockedDate", out var dateField) && dateField.TryGetProperty("timestampValue", out var dateValue))
+                        {
+                            DateTime.TryParse(dateValue.GetString(), out var unlockedDate);
+                            achievement.UnlockedDate = unlockedDate;
+                        }
+                        
+                        achievements.Add(achievement);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting user achievements: {ex.Message}");
+            }
+            
+            return achievements;
+        }
+
+        // Track recipe view for analytics
+        public async Task<bool> TrackRecipeViewAsync(string userId, string recipeId, string idToken)
+        {
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", idToken);
+                
+                var analyticsUrl = $"https://firestore.googleapis.com/v1/projects/{_projectId}/databases/(default)/documents/analytics";
+                
+                var data = new
+                {
+                    fields = new
+                    {
+                        userId = new { stringValue = userId },
+                        recipeId = new { stringValue = recipeId },
+                        action = new { stringValue = "view" },
+                        timestamp = new { timestampValue = DateTime.UtcNow.ToString("o") }
+                    }
+                };
+                
+                var response = await _httpClient.PostAsJsonAsync(analyticsUrl, data);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error tracking recipe view: {ex.Message}");
+                return false;
+            }
+        }
+
+        // Get cooking analytics for a user
+        public async Task<CookingAnalytics> GetCookingAnalyticsAsync(string userId, string idToken, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            var analytics = new CookingAnalytics();
+            
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", idToken);
+                
+                var analyticsUrl = $"https://firestore.googleapis.com/v1/projects/{_projectId}/databases/(default)/documents/analytics";
+                var response = await _httpClient.GetAsync($"{analyticsUrl}?filter=fields.userId.stringValue=\"{userId}\"");
+                
+                if (!response.IsSuccessStatusCode) return analytics;
+                
+                var json = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(json);
+                
+                if (doc.RootElement.TryGetProperty("documents", out var docs))
+                {
+                    var events = new List<AnalyticsEvent>();
+                    
+                    foreach (var docElement in docs.EnumerateArray())
+                    {
+                        var fields = docElement.GetProperty("fields");
+                        var analyticsEvent = new AnalyticsEvent
+                        {
+                            UserId = fields.GetProperty("userId").GetProperty("stringValue").GetString(),
+                            RecipeId = fields.GetProperty("recipeId").GetProperty("stringValue").GetString(),
+                            Action = fields.GetProperty("action").GetProperty("stringValue").GetString()
+                        };
+                        
+                        if (fields.TryGetProperty("timestamp", out var timestampField) && timestampField.TryGetProperty("timestampValue", out var timestampValue))
+                        {
+                            DateTime.TryParse(timestampValue.GetString(), out var timestamp);
+                            analyticsEvent.Timestamp = timestamp;
+                        }
+                        
+                        events.Add(analyticsEvent);
+                    }
+                    
+                    // Filter by date range if provided
+                    if (startDate.HasValue)
+                        events = events.Where(e => e.Timestamp >= startDate.Value).ToList();
+                    if (endDate.HasValue)
+                        events = events.Where(e => e.Timestamp <= endDate.Value).ToList();
+                    
+                    // Calculate analytics
+                    analytics.TotalViews = events.Count(e => e.Action == "view");
+                    analytics.TotalCooks = events.Count(e => e.Action == "cook");
+                    analytics.UniqueDays = events.Select(e => e.Timestamp.Date).Distinct().Count();
+                    analytics.MostViewedRecipes = events
+                        .Where(e => e.Action == "view")
+                        .GroupBy(e => e.RecipeId)
+                        .OrderByDescending(g => g.Count())
+                        .Take(5)
+                        .ToDictionary(g => g.Key, g => g.Count());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting cooking analytics: {ex.Message}");
+            }
+            
+            return analytics;
+        }
+
     }
+}
+
+// Additional models for analytics
+public class AnalyticsEvent
+{
+    public string UserId { get; set; }
+    public string RecipeId { get; set; }
+    public string Action { get; set; }
+    public DateTime Timestamp { get; set; }
+}
+
+public class CookingAnalytics
+{
+    public int TotalViews { get; set; }
+    public int TotalCooks { get; set; }
+    public int UniqueDays { get; set; }
+    public Dictionary<string, int> MostViewedRecipes { get; set; } = new Dictionary<string, int>();
 }
 

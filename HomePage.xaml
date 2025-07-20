@@ -1,60 +1,328 @@
-﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RecipeApp.Pages.HomePage"
-             Title="Home"
+             Title="Dashboard"
              Background="{StaticResource BackgroundThemeBrush}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20" HorizontalOptions="Center">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Card Style -->
+            <Style x:Key="DashboardCard" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="HasShadow" Value="True" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="Margin" Value="8" />
+            </Style>
+            
+            <!-- Stat Card Style -->
+            <Style x:Key="StatCard" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="HasShadow" Value="True" />
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="Margin" Value="4" />
+            </Style>
+            
+            <!-- Action Button Style -->
+            <Style x:Key="ActionButton" TargetType="Button">
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="Margin" Value="4" />
+            </Style>
+            
+            <!-- Section Header Style -->
+            <Style x:Key="SectionHeader" TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#2C3E50" />
+                <Setter Property="Margin" Value="16,16,16,8" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-            <Label Text="👋 Welcome to Recipe App!"
-                   FontSize="26"
-                   HorizontalOptions="Center"
-                   FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light='Black', Dark='White'}" />
+    <RefreshView x:Name="RefreshView" Refreshing="OnRefreshing">
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="8">
 
-            <Button Text="Add New Recipe" Clicked="OnAddRecipeClicked" CornerRadius="10" />
-            <Button Text="View All Recipes" Clicked="OnViewRecipesClicked" CornerRadius="10" />
-            <Button Text="View Favorites" Clicked="OnFavoritesClicked" CornerRadius="10" />
-            <Button Text="My Recipes" Clicked="OnMyRecipesClicked" CornerRadius="10" />
-            <Button Text="Meal Planner" Clicked="OnMealPlannerClicked" CornerRadius="10" />
-            <Button Text="What Can I Cook With..." Clicked="OnIngredientSuggestClicked" CornerRadius="10" />
-            <Button Text="Smart Shopping List" Clicked="OnShoppingListClicked" CornerRadius="10" />
-            <Button Text="Export Cookbook to PDF"
-                    Clicked="OnExportCookbookClicked"
-                    BackgroundColor="DarkCyan"
-                    TextColor="White"
-                    CornerRadius="10" />
-            <Button Text="View Achievements" Clicked="OnAchievementsClicked" CornerRadius="10" />
-            <Button Text="View Leaderboard" Clicked="OnLeaderboardClicked" CornerRadius="10"/>
-            <Button Text="Profile" Clicked="OnProfileClicked" CornerRadius="10"/>
+                <!-- Welcome Header with Search -->
+                <Frame Style="{StaticResource DashboardCard}" BackgroundColor="#3498DB">
+                    <VerticalStackLayout Spacing="12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label x:Name="WelcomeLabel" 
+                                       Text="Good morning, Chef!" 
+                                       FontSize="24" 
+                                       FontAttributes="Bold" 
+                                       TextColor="White" />
+                                <Label x:Name="DateLabel" 
+                                       FontSize="14" 
+                                       TextColor="White" 
+                                       Opacity="0.8" />
+                            </VerticalStackLayout>
+                            
+                            <Button Grid.Column="1" 
+                                    Text="🔍" 
+                                    FontSize="20"
+                                    BackgroundColor="Transparent" 
+                                    TextColor="White"
+                                    Clicked="OnSearchClicked" />
+                        </Grid>
+                        
+                        <!-- Quick Search Bar -->
+                        <SearchBar x:Name="QuickSearchBar" 
+                                   Placeholder="Quick recipe search..." 
+                                   BackgroundColor="White"
+                                   TextChanged="OnQuickSearchTextChanged"
+                                   SearchButtonPressed="OnQuickSearchPressed" />
+                    </VerticalStackLayout>
+                </Frame>
 
-            <!-- Recipe of the Day -->
-            <Frame Padding="10" CornerRadius="12" BorderColor="Teal" BackgroundColor="#e0f7fa" Margin="10">
-                <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnRecipeOfTheDayTapped" />
-                </Frame.GestureRecognizers>
-                <VerticalStackLayout>
-                    <Label Text="🌟 Recipe of the Day" FontSize="20" FontAttributes="Bold" />
-                    <Label x:Name="DailyTitle" FontSize="18" FontAttributes="Bold" TextColor="Teal" />
-                    <Label x:Name="DailyDescription" FontSize="14" TextColor="DarkSlateGray" />
+                <!-- Quick Stats Cards -->
+                <Label Style="{StaticResource SectionHeader}" Text="📊 Your Stats" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Frame Grid.Column="0" Style="{StaticResource StatCard}" BackgroundColor="#E8F5E8">
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="📝" FontSize="24" HorizontalOptions="Center" />
+                            <Label x:Name="TotalRecipesLabel" Text="0" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Recipes" FontSize="12" HorizontalOptions="Center" TextColor="Gray" />
+                        </VerticalStackLayout>
+                    </Frame>
+                    
+                    <Frame Grid.Column="1" Style="{StaticResource StatCard}" BackgroundColor="#FFF3E0">
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="🔥" FontSize="24" HorizontalOptions="Center" />
+                            <Label x:Name="StreakNumberLabel" Text="0" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Day Streak" FontSize="12" HorizontalOptions="Center" TextColor="Gray" />
+                        </VerticalStackLayout>
+                    </Frame>
+                    
+                    <Frame Grid.Column="2" Style="{StaticResource StatCard}" BackgroundColor="#F3E5F5">
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="❤️" FontSize="24" HorizontalOptions="Center" />
+                            <Label x:Name="FavoritesCountLabel" Text="0" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Favorites" FontSize="12" HorizontalOptions="Center" TextColor="Gray" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <!-- Daily Challenge -->
+                <Label Style="{StaticResource SectionHeader}" Text="🎯 Today's Challenge" />
+                <Frame x:Name="ChallengeFrame" Style="{StaticResource DashboardCard}" BackgroundColor="#FFE5B4">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnChallengeFrameTapped" />
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout>
+                        <Label x:Name="ChallengeTitle" Text="Loading challenge..." FontSize="16" FontAttributes="Bold" />
+                        <Label x:Name="ChallengeDescription" Text="" FontSize="14" TextColor="DarkOrange" />
+                        <ProgressBar x:Name="ChallengeProgress" Progress="0" ProgressColor="Orange" Margin="0,8" />
+                        <Label x:Name="ChallengeProgressLabel" Text="0% Complete" FontSize="12" TextColor="Gray" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Recipe of the Day -->
+                <Label Style="{StaticResource SectionHeader}" Text="⭐ Recipe of the Day" />
+                <Frame Style="{StaticResource DashboardCard}" BackgroundColor="#E0F7FA">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnRecipeOfTheDayTapped" />
+                    </Frame.GestureRecognizers>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label x:Name="DailyTitle" FontSize="18" FontAttributes="Bold" TextColor="Teal" />
+                            <Label x:Name="DailyDescription" FontSize="14" TextColor="DarkSlateGray" />
+                            <Label x:Name="DailyCategory" FontSize="12" TextColor="Gray" />
+                        </VerticalStackLayout>
+                        
+                        <Label Grid.Column="1" Text="👆" FontSize="24" VerticalOptions="Center" />
+                    </Grid>
+                </Frame>
+
+                <!-- Recently Viewed/Cooked -->
+                <Label Style="{StaticResource SectionHeader}" Text="🕒 Recently Viewed" />
+                <CollectionView x:Name="RecentRecipesCollection" HeightRequest="120">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame WidthRequest="150" HeightRequest="100" CornerRadius="12" BackgroundColor="White" HasShadow="True" Margin="4">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnRecentRecipeTapped" CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Title}" FontSize="14" FontAttributes="Bold" MaxLines="2" />
+                                    <Label Text="{Binding Category}" FontSize="12" TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Achievement Progress -->
+                <Label Style="{StaticResource SectionHeader}" Text="🏆 Achievement Progress" />
+                <Frame Style="{StaticResource DashboardCard}" BackgroundColor="#F0F8FF">
+                    <VerticalStackLayout>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label x:Name="NextAchievementTitle" Text="Next Achievement" FontSize="16" FontAttributes="Bold" />
+                                <Label x:Name="NextAchievementDescription" Text="Keep cooking to unlock!" FontSize="14" TextColor="Gray" />
+                            </VerticalStackLayout>
+                            
+                            <Label Grid.Column="1" x:Name="AchievementIcon" Text="🎖️" FontSize="24" VerticalOptions="Center" />
+                        </Grid>
+                        
+                        <ProgressBar x:Name="AchievementProgress" Progress="0.3" ProgressColor="Gold" Margin="0,8" />
+                        <Label x:Name="AchievementProgressLabel" Text="3/10 recipes posted" FontSize="12" TextColor="Gray" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Quick Actions Grid -->
+                <Label Style="{StaticResource SectionHeader}" Text="⚡ Quick Actions" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <Button Grid.Row="0" Grid.Column="0" Text="➕ Add Recipe" 
+                            Style="{StaticResource ActionButton}" 
+                            BackgroundColor="#2ECC71" TextColor="White"
+                            Clicked="OnAddRecipeClicked" />
+                    
+                    <Button Grid.Row="0" Grid.Column="1" Text="📖 View All" 
+                            Style="{StaticResource ActionButton}" 
+                            BackgroundColor="#3498DB" TextColor="White"
+                            Clicked="OnViewRecipesClicked" />
+                    
+                    <Button Grid.Row="1" Grid.Column="0" Text="❤️ Favorites" 
+                            Style="{StaticResource ActionButton}" 
+                            BackgroundColor="#E74C3C" TextColor="White"
+                            Clicked="OnFavoritesClicked" />
+                    
+                    <Button Grid.Row="1" Grid.Column="1" Text="📅 Meal Plan" 
+                            Style="{StaticResource ActionButton}" 
+                            BackgroundColor="#9B59B6" TextColor="White"
+                            Clicked="OnMealPlannerClicked" />
+                    
+                    <Button Grid.Row="2" Grid.Column="0" Text="🛒 Shopping" 
+                            Style="{StaticResource ActionButton}" 
+                            BackgroundColor="#F39C12" TextColor="White"
+                            Clicked="OnShoppingListClicked" />
+                    
+                    <Button Grid.Row="2" Grid.Column="1" Text="🔍 Suggest" 
+                            Style="{StaticResource ActionButton}" 
+                            BackgroundColor="#1ABC9C" TextColor="White"
+                            Clicked="OnIngredientSuggestClicked" />
+                </Grid>
+
+                <!-- More Features Section -->
+                <Label Style="{StaticResource SectionHeader}" Text="🔧 More Features" />
+                <VerticalStackLayout Spacing="8">
+                    <Button Text="👤 Profile Settings" 
+                            Style="{StaticResource ActionButton}" 
+                            BackgroundColor="#34495E" TextColor="White"
+                            Clicked="OnProfileClicked" />
+                    
+                    <Button Text="🏆 Achievements & Leaderboard" 
+                            Style="{StaticResource ActionButton}" 
+                            BackgroundColor="#8E44AD" TextColor="White"
+                            Clicked="OnAchievementsClicked" />
+                    
+                    <Button Text="📄 Export Cookbook PDF" 
+                            Style="{StaticResource ActionButton}" 
+                            BackgroundColor="#16A085" TextColor="White"
+                            Clicked="OnExportCookbookClicked" />
+                    
+                    <Button Text="🎤 Voice Cooking Mode" 
+                            Style="{StaticResource ActionButton}" 
+                            BackgroundColor="#E67E22" TextColor="White"
+                            Clicked="OnVoiceCookingClicked" />
+                    
+                    <Button Text="📊 Analytics Dashboard" 
+                            Style="{StaticResource ActionButton}" 
+                            BackgroundColor="#9C27B0" TextColor="White"
+                            Clicked="OnAnalyticsDashboardClicked" />
                 </VerticalStackLayout>
-            </Frame>
 
-            <!-- Streak Tracker -->
-            <Frame BackgroundColor="#FFF3E0" CornerRadius="10" Padding="10" Margin="10">
-                <VerticalStackLayout>
-                    <Label Text="🔥 Streak Tracker" FontAttributes="Bold" FontSize="18"/>
-                    <Label x:Name="StreakLabel" Text="Loading..." FontSize="14" TextColor="DarkOrange"/>
-                </VerticalStackLayout>
-            </Frame>
+                <!-- Analytics Summary -->
+                <Label Style="{StaticResource SectionHeader}" Text="📈 This Week" />
+                <Frame Style="{StaticResource DashboardCard}" BackgroundColor="#F8F9FA">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                            <Label x:Name="WeeklyRecipesLabel" Text="0" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Recipes Added" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                            <Label x:Name="WeeklyCookingLabel" Text="0" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Times Cooked" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        
+                        <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                            <Label x:Name="WeeklyFavoritesLabel" Text="0" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="New Favorites" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
 
-            <Button Text="Logout"
-                    Clicked="OnLogoutClicked"
-                    BackgroundColor="#ff4d4d"
-                    TextColor="White"
-                    CornerRadius="10" />
+                <!-- Logout Button -->
+                <Button Text="🚪 Logout" 
+                        Style="{StaticResource ActionButton}" 
+                        BackgroundColor="#C0392B" TextColor="White"
+                        Clicked="OnLogoutClicked" 
+                        Margin="16,24,16,16" />
 
-        </VerticalStackLayout>
-    </ScrollView>
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+
+    <!-- Floating Action Button -->
+    <Button x:Name="FloatingActionButton"
+            Text="+"
+            FontSize="24"
+            FontAttributes="Bold"
+            WidthRequest="56"
+            HeightRequest="56"
+            CornerRadius="28"
+            BackgroundColor="#FF6B6B"
+            TextColor="White"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Margin="0,0,16,100"
+            Clicked="OnFloatingActionButtonClicked"
+            HasShadow="True" />
+
 </ContentPage>

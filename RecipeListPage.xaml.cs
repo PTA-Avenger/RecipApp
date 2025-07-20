@@ -1,4 +1,4 @@
-﻿using RecipeApp.Models;
+using RecipeApp.Models;
 using RecipeApp.Services;
 using RecipeApp.Pages;
 using RecipeApp.Helpers;
@@ -10,11 +10,19 @@ public partial class RecipeListPage : ContentPage
     private readonly AuthService _authService;
     private readonly FirestoreService _firestoreService = new();
     private List<Recipe> _allRecipes = new();
+    private string _initialSearchTerm;
 
-    public RecipeListPage(AuthService authService)
+    public RecipeListPage(AuthService authService, string searchTerm = null)
     {
         InitializeComponent();
         _authService = authService;
+        _initialSearchTerm = searchTerm;
+        
+        // Set the search term if provided
+        if (!string.IsNullOrWhiteSpace(_initialSearchTerm))
+        {
+            SearchBar.Text = _initialSearchTerm;
+        }
     }
 
     protected override async void OnAppearing()
@@ -22,7 +30,33 @@ public partial class RecipeListPage : ContentPage
         base.OnAppearing();
 
         _allRecipes = await _firestoreService.GetRecipesAsync(_authService.GetIdToken());
-        RecipeListView.ItemsSource = _allRecipes;
+        
+        // Apply initial search filter if provided
+        if (!string.IsNullOrWhiteSpace(_initialSearchTerm))
+        {
+            FilterRecipes(_initialSearchTerm);
+        }
+        else
+        {
+            RecipeListView.ItemsSource = _allRecipes;
+        }
+    }
+
+    private void FilterRecipes(string query)
+    {
+        var filtered = _allRecipes
+            .Where(r =>
+                (!string.IsNullOrWhiteSpace(r.Title) &&
+                 r.Title.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrWhiteSpace(r.Description) &&
+                 r.Description.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrWhiteSpace(r.Ingredients) &&
+                 r.Ingredients.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrWhiteSpace(r.Category) &&
+                 r.Category.Contains(query, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+        
+        RecipeListView.ItemsSource = filtered;
     }
 
     private async void OnRecipeTapped(object sender, TappedEventArgs e)
@@ -35,6 +69,16 @@ public partial class RecipeListPage : ContentPage
 
         if (e.Parameter is Recipe recipe)
         {
+            // Track recipe view for analytics
+            try
+            {
+                await _firestoreService.TrackRecipeViewAsync(_authService.GetUserId(), recipe.Id, _authService.GetIdToken());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to track recipe view: {ex.Message}");
+            }
+            
             await Navigation.PushAsync(new RecipeDetailPage(recipe, _authService));
         }
     }
@@ -42,15 +86,7 @@ public partial class RecipeListPage : ContentPage
     private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
     {
         var query = e.NewTextValue ?? "";
-        var filtered = _allRecipes
-            .Where(r =>
-                (!string.IsNullOrWhiteSpace(r.Title) &&
-                 r.Title.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
-                (!string.IsNullOrWhiteSpace(r.Description) &&
-                 r.Description.Contains(query, StringComparison.OrdinalIgnoreCase)))
-            .ToList();
-
-        RecipeListView.ItemsSource = filtered;
+        FilterRecipes(query);
     }
 
     private void OnCategoryFilterChanged(object sender, EventArgs e)

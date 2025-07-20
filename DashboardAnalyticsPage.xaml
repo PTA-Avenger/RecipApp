@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeApp.Pages.DashboardAnalyticsPage"
+             Title="Analytics Dashboard"
+             BackgroundColor="White">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Analytics Card Style -->
+            <Style x:Key="AnalyticsCard" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="HasShadow" Value="True" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Padding" Value="20" />
+                <Setter Property="Margin" Value="8" />
+                <Setter Property="BorderColor" Value="#E0E0E0" />
+            </Style>
+            
+            <!-- Metric Card Style -->
+            <Style x:Key="MetricCard" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="HasShadow" Value="True" />
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="Margin" Value="4" />
+            </Style>
+            
+            <!-- Section Header Style -->
+            <Style x:Key="AnalyticsHeader" TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#2C3E50" />
+                <Setter Property="Margin" Value="16,20,16,12" />
+            </Style>
+            
+            <!-- Chart Container Style -->
+            <Style x:Key="ChartContainer" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="HasShadow" Value="True" />
+                <Setter Property="BackgroundColor" Value="#F8F9FA" />
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="Margin" Value="8" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <RefreshView x:Name="RefreshView" Refreshing="OnRefreshing">
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="12">
+
+                <!-- Header with Time Period Selector -->
+                <Frame Style="{StaticResource AnalyticsCard}" BackgroundColor="#3498DB">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="📊 Analytics Dashboard" 
+                                   FontSize="24" 
+                                   FontAttributes="Bold" 
+                                   TextColor="White" />
+                            <Label x:Name="PeriodLabel" 
+                                   Text="Last 30 Days" 
+                                   FontSize="14" 
+                                   TextColor="White" 
+                                   Opacity="0.9" />
+                        </VerticalStackLayout>
+                        
+                        <Button Grid.Column="1" 
+                                Text="📅" 
+                                FontSize="20"
+                                BackgroundColor="Transparent" 
+                                TextColor="White"
+                                Clicked="OnPeriodSelectorClicked" />
+                    </Grid>
+                </Frame>
+
+                <!-- Key Performance Metrics -->
+                <Label Style="{StaticResource AnalyticsHeader}" Text="🎯 Key Metrics" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource MetricCard}" BackgroundColor="#E8F5E8">
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="👁️" FontSize="28" HorizontalOptions="Center" />
+                            <Label x:Name="TotalViewsLabel" Text="0" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Recipe Views" FontSize="12" HorizontalOptions="Center" TextColor="Gray" />
+                        </VerticalStackLayout>
+                    </Frame>
+                    
+                    <Frame Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricCard}" BackgroundColor="#FFF3E0">
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="🍳" FontSize="28" HorizontalOptions="Center" />
+                            <Label x:Name="TotalCooksLabel" Text="0" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Times Cooked" FontSize="12" HorizontalOptions="Center" TextColor="Gray" />
+                        </VerticalStackLayout>
+                    </Frame>
+                    
+                    <Frame Grid.Row="1" Grid.Column="0" Style="{StaticResource MetricCard}" BackgroundColor="#F3E5F5">
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="📅" FontSize="28" HorizontalOptions="Center" />
+                            <Label x:Name="ActiveDaysLabel" Text="0" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Active Days" FontSize="12" HorizontalOptions="Center" TextColor="Gray" />
+                        </VerticalStackLayout>
+                    </Frame>
+                    
+                    <Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricCard}" BackgroundColor="#E3F2FD">
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="⭐" FontSize="28" HorizontalOptions="Center" />
+                            <Label x:Name="AvgRatingLabel" Text="0.0" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Avg Rating" FontSize="12" HorizontalOptions="Center" TextColor="Gray" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <!-- Cooking Streak Analysis -->
+                <Label Style="{StaticResource AnalyticsHeader}" Text="🔥 Streak Analysis" />
+                <Frame Style="{StaticResource AnalyticsCard}" BackgroundColor="#FFF8E1">
+                    <VerticalStackLayout Spacing="12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                                <Label x:Name="CurrentStreakLabel" Text="0" FontSize="20" FontAttributes="Bold" TextColor="Orange" />
+                                <Label Text="Current Streak" FontSize="12" TextColor="Gray" />
+                            </VerticalStackLayout>
+                            
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                                <Label x:Name="LongestStreakLabel" Text="0" FontSize="20" FontAttributes="Bold" TextColor="Orange" />
+                                <Label Text="Longest Streak" FontSize="12" TextColor="Gray" />
+                            </VerticalStackLayout>
+                            
+                            <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                                <Label x:Name="StreakGoalLabel" Text="0%" FontSize="20" FontAttributes="Bold" TextColor="Orange" />
+                                <Label Text="Goal Progress" FontSize="12" TextColor="Gray" />
+                            </VerticalStackLayout>
+                        </Grid>
+                        
+                        <ProgressBar x:Name="StreakProgressBar" Progress="0" ProgressColor="Orange" />
+                        <Label x:Name="StreakMotivationLabel" Text="Keep cooking to maintain your streak!" FontSize="14" TextColor="DarkOrange" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Recipe Performance -->
+                <Label Style="{StaticResource AnalyticsHeader}" Text="📈 Recipe Performance" />
+                <Frame Style="{StaticResource AnalyticsCard}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="🏆 Top Performing Recipes" FontSize="18" FontAttributes="Bold" />
+                        
+                        <CollectionView x:Name="TopRecipesCollection" HeightRequest="200">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Margin="0,4" Padding="12" CornerRadius="8" BackgroundColor="#F8F9FA" BorderColor="#E0E0E0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <VerticalStackLayout Grid.Column="0">
+                                                <Label Text="{Binding Title}" FontSize="16" FontAttributes="Bold" />
+                                                <Label Text="{Binding Category}" FontSize="12" TextColor="Gray" />
+                                            </VerticalStackLayout>
+                                            
+                                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="End">
+                                                <Label Text="{Binding ViewCount}" FontSize="16" FontAttributes="Bold" TextColor="Green" />
+                                                <Label Text="views" FontSize="12" TextColor="Gray" />
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Category Breakdown -->
+                <Label Style="{StaticResource AnalyticsHeader}" Text="🥘 Category Breakdown" />
+                <Frame Style="{StaticResource ChartContainer}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Recipe Categories" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" />
+                        
+                        <!-- Simple category visualization -->
+                        <CollectionView x:Name="CategoryBreakdownCollection" HeightRequest="150">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Margin="2" Padding="8" CornerRadius="6" BackgroundColor="{Binding Color}">
+                                        <VerticalStackLayout HorizontalOptions="Center">
+                                            <Label Text="{Binding Category}" FontSize="14" FontAttributes="Bold" TextColor="White" />
+                                            <Label Text="{Binding Count}" FontSize="12" TextColor="White" />
+                                            <Label Text="{Binding Percentage, StringFormat='{0:F1}%'}" FontSize="10" TextColor="White" />
+                                        </VerticalStackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                            </CollectionView.ItemsLayout>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Weekly Activity Chart -->
+                <Label Style="{StaticResource AnalyticsHeader}" Text="📊 Weekly Activity" />
+                <Frame Style="{StaticResource ChartContainer}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="Last 7 Days Activity" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" />
+                        
+                        <!-- Simple bar chart representation -->
+                        <Grid x:Name="WeeklyChartGrid" HeightRequest="150" Margin="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Chart bars will be added programmatically -->
+                        </Grid>
+                        
+                        <Label Text="📱 Views  🍳 Cooks  ❤️ Favorites" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Achievements Progress -->
+                <Label Style="{StaticResource AnalyticsHeader}" Text="🏆 Achievement Progress" />
+                <Frame Style="{StaticResource AnalyticsCard}">
+                    <VerticalStackLayout Spacing="16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="Achievement Summary" FontSize="18" FontAttributes="Bold" />
+                                <Label x:Name="AchievementSummaryLabel" Text="Loading achievements..." FontSize="14" TextColor="Gray" />
+                            </VerticalStackLayout>
+                            
+                            <Label Grid.Column="1" Text="🎖️" FontSize="32" VerticalOptions="Center" />
+                        </Grid>
+                        
+                        <CollectionView x:Name="AchievementProgressCollection" HeightRequest="120">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Margin="0,4" Padding="12" CornerRadius="8" BackgroundColor="#F0F8FF" BorderColor="#E0E0E0">
+                                        <VerticalStackLayout>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <VerticalStackLayout Grid.Column="0">
+                                                    <Label Text="{Binding Title}" FontSize="14" FontAttributes="Bold" />
+                                                    <Label Text="{Binding Description}" FontSize="12" TextColor="Gray" />
+                                                </VerticalStackLayout>
+                                                
+                                                <Label Grid.Column="1" Text="{Binding Icon}" FontSize="20" VerticalOptions="Center" />
+                                            </Grid>
+                                            
+                                            <ProgressBar Progress="{Binding ProgressPercentage}" ProgressColor="Gold" Margin="0,4" />
+                                            <Label Text="{Binding ProgressText}" FontSize="11" TextColor="Gray" />
+                                        </VerticalStackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        
+                        <Button Text="View All Achievements" 
+                                Clicked="OnViewAllAchievementsClicked"
+                                BackgroundColor="#8E44AD" 
+                                TextColor="White" 
+                                CornerRadius="8" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Insights and Recommendations -->
+                <Label Style="{StaticResource AnalyticsHeader}" Text="💡 Insights & Recommendations" />
+                <Frame Style="{StaticResource AnalyticsCard}" BackgroundColor="#F0F8FF">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="🧠 Smart Insights" FontSize="18" FontAttributes="Bold" />
+                        
+                        <CollectionView x:Name="InsightsCollection" HeightRequest="200">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Margin="0,4" Padding="12" CornerRadius="8" BackgroundColor="White" BorderColor="#E0E0E0">
+                                        <VerticalStackLayout>
+                                            <Label Text="{Binding Icon}" FontSize="20" />
+                                            <Label Text="{Binding Title}" FontSize="14" FontAttributes="Bold" />
+                                            <Label Text="{Binding Description}" FontSize="12" TextColor="Gray" />
+                                            <Label Text="{Binding Recommendation}" FontSize="12" TextColor="Blue" />
+                                        </VerticalStackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Export and Share Options -->
+                <Label Style="{StaticResource AnalyticsHeader}" Text="📤 Export & Share" />
+                <VerticalStackLayout Spacing="8">
+                    <Button Text="📊 Export Analytics Report" 
+                            Clicked="OnExportAnalyticsClicked"
+                            BackgroundColor="#16A085" 
+                            TextColor="White" 
+                            CornerRadius="12" />
+                    
+                    <Button Text="📱 Share Progress" 
+                            Clicked="OnShareProgressClicked"
+                            BackgroundColor="#3498DB" 
+                            TextColor="White" 
+                            CornerRadius="12" />
+                    
+                    <Button Text="🎯 Set Goals" 
+                            Clicked="OnSetGoalsClicked"
+                            BackgroundColor="#E67E22" 
+                            TextColor="White" 
+                            CornerRadius="12" />
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+
+</ContentPage>
